@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# for testnet
+CARDANO_NET="testnet"
+export CARDANO_NODE_NETWORK_ID=2
+CARDANO_NET_PREFIX="--testnet-magic ${CARDANO_NODE_NETWORK_ID}"
+
+# for mainnet
+#CARDANO_NET="mainnet"
+#CARDANO_NET_PREFIX="--mainnet"
+#
+
+KEYS_PATH=./wallet
+ADDRESSES_PATH=./wallet
+FILES_PATH=./files
+POLICY_PATH=./policy
+STAKING_FILES_PATH=./staking
+PROTOCOL_PARAMETERS=${FILES_PATH}/protocol-parameters.json
+
+export CARDANO_NODE_SOCKET_PATH=/tmp/cardano-2773280047/node-spo3/node.socket
+export CARDANO_CLI_TAG="babbage"
+export MULTISIG_ADDRESS_WITNESSES=5
+
+if [ ! -d ${KEYS_PATH} ] ; then
+ mkdir -p ${KEYS_PATH}
+fi
+
+if [ ! -d ${ADDRESSES_PATH} ] ; then
+ mkdir -p ${ADDRESSES_PATH}
+fi
+
+if [ ! -d ${FILES_PATH} ] ; then
+ mkdir -p ${FILES_PATH}
+fi
+
+if [ ! -d ${POLICY_PATH} ] ; then
+ mkdir -p ${POLICY_PATH}
+fi
+
+if [ ! -d ${STAKING_FILES_PATH} ] ; then
+ mkdir -p ${STAKING_FILES_PATH}
+fi
+
+if [ ! -f ${PROTOCOL_PARAMETERS} ] ; then
+ cardano-cli query protocol-parameters --out-file  ${PROTOCOL_PARAMETERS} ${CARDANO_NET_PREFIX}
+fi
