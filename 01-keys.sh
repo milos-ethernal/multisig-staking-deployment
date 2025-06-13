@@ -2,6 +2,8 @@
 
 . ./env
 
+set -e
+
 for i in {0..2}
 do
  if [ -f "${KEYS_PATH}/payment-${i}.skey" ] ; then

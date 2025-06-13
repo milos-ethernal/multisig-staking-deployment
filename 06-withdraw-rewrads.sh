@@ -2,6 +2,8 @@
 
 . ./env
 
+set -e
+
 STAKE_ADDRESS="stake_test17zwznsyzt7xpynewnulmzzr0qf43jqd3rs8pzla447gmf8q578s23"
 ADDRESS=$(cat ${ADDRESSES_PATH}/script-with-stake.addr)
 

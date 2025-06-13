@@ -2,13 +2,15 @@
 
 . ./env
 
+set -e
+
 # Define some stake pool id, choose arbitrary one
 # https://preview.cexplorer.io/pool
-STAKE_POOL_ID="pool1zzcrjzyrjf6glwhg8em2qpne0rjkurvshplazhmrzqtfun7s5k9"
+STAKE_POOL_ID="pool1hvsmu7l9c23ltrncj6lkgmr6ncth7s8tx67zyj2fxl8054xyjz6"
 
 # Create delegation certificate for multisig address and specific stake pool 
 cardano-cli ${CARDANO_CLI_TAG} stake-address stake-delegation-certificate\
-    --stake-script-file ${POLICY_PATH}/policy.script \
+    --stake-script-file ${POLICY_PATH}/policy-stake.script \
     --stake-pool-id ${STAKE_POOL_ID} \
     --out-file ${STAKING_FILES_PATH}/delegation.cert
 
@@ -38,11 +40,12 @@ EXPIRE=$((CURRENT_SLOT+300))
 # --ttl == --invalid-hereafter 
 cardano-cli ${CARDANO_CLI_TAG} transaction build-raw \
     --tx-in $TXIN \
-    --tx-in-script-file ${POLICY_PATH}/policy.script \
+    --tx-in-script-file ${POLICY_PATH}/policy-payment.script \
     --tx-out $ADDRESS+0 \
     --ttl $EXPIRE \
     --fee 0 \
     --certificate-file ${STAKING_FILES_PATH}/delegation.cert \
+    --certificate-script-file ${POLICY_PATH}/policy-stake.script \
     --out-file ${STAKING_FILES_PATH}/delegation-tx.raw
 
 # Calculate (min) fee for a tx
@@ -63,10 +66,11 @@ cardano-cli ${CARDANO_CLI_TAG} transaction build-raw \
     --tx-in $TXIN \
     --tx-out $ADDRESS+$CHANGE \
     --ttl $EXPIRE \
-    --tx-in-script-file ${POLICY_PATH}/policy.script \
+    --tx-in-script-file ${POLICY_PATH}/policy-payment.script \
     --out-file ${STAKING_FILES_PATH}/delegation-tx.raw \
     --fee $FEE_AMOUNT \
-    --certificate-file ${STAKING_FILES_PATH}/delegation.cert
+    --certificate-file ${STAKING_FILES_PATH}/delegation.cert \
+    --certificate-script-file ${POLICY_PATH}/policy-stake.script
 
 # Create witnesses(signatures) payment
 WITNESS_INDEX=$((${MULTISIG_ADDRESS_WITNESSES}-1))
@@ -80,11 +84,10 @@ do
 done
 
 # Create witnesses(signatures) stake
-WITNESS_INDEX=$((${MULTISIG_ADDRESS_WITNESSES}-1))
 for i in $(seq 0 ${WITNESS_INDEX})
 do
     cardano-cli ${CARDANO_CLI_TAG} transaction witness \
-    --signing-key-file ${KEYS_PATH}/stkae-${i}.skey \
+    --signing-key-file ${KEYS_PATH}/stake-${i}.skey \
     --tx-body-file ${STAKING_FILES_PATH}/delegation-tx.raw \
     --out-file ${STAKING_FILES_PATH}/stake-${i}.witness \
     ${CARDANO_NET_PREFIX}

@@ -2,6 +2,8 @@
 
 . ./env
 
+set -e
+
 ADDRESS=$(cat ${ADDRESSES_PATH}/script-with-stake.addr)
 
 echo multisig:

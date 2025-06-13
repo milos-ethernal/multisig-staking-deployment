@@ -1,8 +1,8 @@
 #!/bin/bash
 
-
 . ./env
 
+set -e
 
 KEYHASH0=$(cardano-cli address key-hash --payment-verification-key-file ${KEYS_PATH}/payment-0.vkey)
 KEYHASH1=$(cardano-cli address key-hash --payment-verification-key-file ${KEYS_PATH}/payment-1.vkey)
@@ -39,10 +39,10 @@ EOF
 )
 
 # Sort based on hash value
-stake_sorted=$(echo "$keyhashes" | sort -t ':' -k2)
+stake_sorted=$(echo "$stake_keyhashes" | sort -t ':' -k2)
 
 # Print sorted key indexes and their hashes
-echo "$sorted"
+echo "$stake_sorted"
 
 if [ ! -f ${POLICY_PATH}/payment-policy.script ] ; then
 cat << EOF >${POLICY_PATH}/policy-payment.script

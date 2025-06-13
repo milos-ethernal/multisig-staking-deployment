@@ -2,6 +2,8 @@
 
 . ./env
 
+set -e
+
 # Get stake address deposit amount from protocol parameters as stakeAddressDeposit or keyDeposit
 # check protocol-parameters.json first, it could be listed as "keyDeposit" or "stakeAddressDeposit"
 # depending on the cardano-cli version

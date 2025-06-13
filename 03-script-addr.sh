@@ -2,6 +2,8 @@
 
 . ./env
 
+set -e
+
 cardano-cli address build \
     --payment-script-file ${POLICY_PATH}/policy-payment.script \
     ${CARDANO_NET_PREFIX} \
