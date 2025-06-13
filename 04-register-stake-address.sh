@@ -9,7 +9,7 @@ KEY_REG_DEPOSIT_AMT=$(cat files/protocol-parameters.json | jq -r 'if has("stakeA
 
 # Create registration certificate
 cardano-cli ${CARDANO_CLI_TAG} stake-address registration-certificate \
-  --stake-script-file ${POLICY_PATH}/policy.script \
+  --stake-script-file ${POLICY_PATH}/policy-stake.script \
   --key-reg-deposit-amt ${KEY_REG_DEPOSIT_AMT} \
   --out-file ${STAKING_FILES_PATH}/registration.cert
 
@@ -40,7 +40,7 @@ cardano-cli ${CARDANO_CLI_TAG} transaction build \
   --tx-in $TXIN \
   --change-address $ADDRESS \
   --certificate-file ${STAKING_FILES_PATH}/registration.cert \
-  --tx-in-script-file ${POLICY_PATH}/policy.script \
+  --tx-in-script-file ${POLICY_PATH}/policy-payment.script \
   --witness-override ${WITNESS_NUMBER} \
   --out-file ${STAKING_FILES_PATH}/registration-tx.raw
 

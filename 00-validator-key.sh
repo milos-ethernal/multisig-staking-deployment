@@ -38,7 +38,7 @@ do
     echo "Key already exists!"
  else
     jq -n \
-        --arg skey "$(eval echo \$PRIVATE_KEY_HEX$i)" \
+        --arg skey "$(eval echo \$STAKE_PRIVATE_KEY_HEX$i)" \
         '{
             "type": "PaymentSigningKeyShelley_ed25519",
             "description": "Payment Signing Key",

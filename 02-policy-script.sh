@@ -30,7 +30,7 @@ STAKE_KEYHASH2=$(cardano-cli address key-hash --payment-verification-key-file ${
 STAKE_KEYHASH3=$(cardano-cli address key-hash --payment-verification-key-file ${KEYS_PATH}/stake-3.vkey)
 
 # Combine them into a labeled list
-keyhashes=$(cat <<EOF
+stake_keyhashes=$(cat <<EOF
 0:$STAKE_KEYHASH0
 1:$STAKE_KEYHASH1
 2:$STAKE_KEYHASH2
@@ -39,7 +39,7 @@ EOF
 )
 
 # Sort based on hash value
-sorted=$(echo "$keyhashes" | sort -t ':' -k2)
+stake_sorted=$(echo "$keyhashes" | sort -t ':' -k2)
 
 # Print sorted key indexes and their hashes
 echo "$sorted"
@@ -48,7 +48,7 @@ if [ ! -f ${POLICY_PATH}/payment-policy.script ] ; then
 cat << EOF >${POLICY_PATH}/policy-payment.script
 {
  "type": "atLeast",
- "required": 4,
+ "required": 3,
  "scripts":
  [
    {
@@ -76,7 +76,7 @@ if [ ! -f ${POLICY_PATH}/payment-policy.script ] ; then
 cat << EOF >${POLICY_PATH}/policy-stake.script
 {
  "type": "atLeast",
- "required": 4,
+ "required": 3,
  "scripts":
  [
    {

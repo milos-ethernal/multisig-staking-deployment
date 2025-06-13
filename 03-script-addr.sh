@@ -3,7 +3,7 @@
 . ./env
 
 cardano-cli address build \
-    --payment-script-file ${POLICY_PATH}/policy.script \
+    --payment-script-file ${POLICY_PATH}/policy-payment.script \
     ${CARDANO_NET_PREFIX} \
     --out-file ${ADDRESSES_PATH}/script.addr
 
