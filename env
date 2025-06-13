@@ -2,7 +2,7 @@
 
 # for testnet
 CARDANO_NET="testnet"
-export CARDANO_NODE_NETWORK_ID=2
+export CARDANO_NODE_NETWORK_ID=3311
 CARDANO_NET_PREFIX="--testnet-magic ${CARDANO_NODE_NETWORK_ID}"
 
 # for mainnet
@@ -19,7 +19,7 @@ PROTOCOL_PARAMETERS=${FILES_PATH}/protocol-parameters.json
 
 export CARDANO_NODE_SOCKET_PATH=/tmp/cardano-2773280047/node-spo3/node.socket
 export CARDANO_CLI_TAG="babbage"
-export MULTISIG_ADDRESS_WITNESSES=5
+export MULTISIG_ADDRESS_WITNESSES=4
 
 if [ ! -d ${KEYS_PATH} ] ; then
  mkdir -p ${KEYS_PATH}

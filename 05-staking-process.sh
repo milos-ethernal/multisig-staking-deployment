@@ -46,11 +46,12 @@ cardano-cli ${CARDANO_CLI_TAG} transaction build-raw \
     --out-file ${STAKING_FILES_PATH}/delegation-tx.raw
 
 # Calculate (min) fee for a tx
+WITNESS_NUMBER=$((${MULTISIG_ADDRESS_WITNESSES}*2))
 FEE=$(cardano-cli ${CARDANO_CLI_TAG} transaction calculate-min-fee \
    --tx-body-file ${STAKING_FILES_PATH}/delegation-tx.raw \
    --tx-in-count 1 \
    --tx-out-count 1 \
-   --witness-count ${MULTISIG_ADDRESS_WITNESSES} \
+   --witness-count ${WITNESS_NUMBER} \
    --protocol-params-file $PROTOCOL_PARAMETERS)
 FEE_AMOUNT=$(echo ${FEE} | awk '{print $1}')
 
@@ -67,7 +68,7 @@ cardano-cli ${CARDANO_CLI_TAG} transaction build-raw \
     --fee $FEE_AMOUNT \
     --certificate-file ${STAKING_FILES_PATH}/delegation.cert
 
-# Create witnesses(signatures)
+# Create witnesses(signatures) payment
 WITNESS_INDEX=$((${MULTISIG_ADDRESS_WITNESSES}-1))
 for i in $(seq 0 ${WITNESS_INDEX})
 do
@@ -78,6 +79,17 @@ do
     ${CARDANO_NET_PREFIX}
 done
 
+# Create witnesses(signatures) stake
+WITNESS_INDEX=$((${MULTISIG_ADDRESS_WITNESSES}-1))
+for i in $(seq 0 ${WITNESS_INDEX})
+do
+    cardano-cli ${CARDANO_CLI_TAG} transaction witness \
+    --signing-key-file ${KEYS_PATH}/stkae-${i}.skey \
+    --tx-body-file ${STAKING_FILES_PATH}/delegation-tx.raw \
+    --out-file ${STAKING_FILES_PATH}/stake-${i}.witness \
+    ${CARDANO_NET_PREFIX}
+done
+
 # Asemble final tx for submission
 cardano-cli ${CARDANO_CLI_TAG} transaction assemble \
    --tx-body-file ${STAKING_FILES_PATH}/delegation-tx.raw \
@@ -85,7 +97,10 @@ cardano-cli ${CARDANO_CLI_TAG} transaction assemble \
    --witness-file ${STAKING_FILES_PATH}/payment-1.witness \
    --witness-file ${STAKING_FILES_PATH}/payment-2.witness \
    --witness-file ${STAKING_FILES_PATH}/payment-3.witness \
-   --witness-file ${STAKING_FILES_PATH}/payment-4.witness \
+   --witness-file ${STAKING_FILES_PATH}/stake-0.witness \
+   --witness-file ${STAKING_FILES_PATH}/stake-1.witness \
+   --witness-file ${STAKING_FILES_PATH}/stake-2.witness \
+   --witness-file ${STAKING_FILES_PATH}/stake-3.witness \
    --out-file ${STAKING_FILES_PATH}/delegation-tx.signed
 
 # Submit tx to chain
