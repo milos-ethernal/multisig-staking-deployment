@@ -1,8 +1,8 @@
 #!/bin/bash
 
-. ./env
-
 set -e
+
+. ./env
 
 # Define some stake pool id, choose arbitrary one
 # https://preview.cexplorer.io/pool
@@ -71,6 +71,16 @@ cardano-cli ${CARDANO_CLI_TAG} transaction build-raw \
     --fee $FEE_AMOUNT \
     --certificate-file ${STAKING_FILES_PATH}/delegation.cert \
     --certificate-script-file ${POLICY_PATH}/policy-stake.script
+
+# alternative(simpler) way to build tx
+#cardano-cli ${CARDANO_CLI_TAG} transaction build \
+#  --tx-in $TXIN \
+#  --change-address $ADDRESS \
+#  --certificate-file ${STAKING_FILES_PATH}/delegation.cert \
+#  --certificate-script-file ${POLICY_PATH}/policy-stake.script \
+#  --tx-in-script-file ${POLICY_PATH}/policy-payment.script \
+#  --witness-override ${WITNESS_NUMBER} \
+#  --out-file ${STAKING_FILES_PATH}/delegation-tx.raw
 
 # Create witnesses(signatures) payment
 WITNESS_INDEX=$((${MULTISIG_ADDRESS_WITNESSES}-1))

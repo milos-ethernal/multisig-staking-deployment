@@ -18,8 +18,9 @@ keyhashes=$(cat <<EOF
 EOF
 )
 
-# Sort based on hash value
+# Sort based on hash value and extract sorted hashes
 sorted=$(echo "$keyhashes" | sort -t ':' -k2)
+SORTED_KEYHASHES=($(echo "$sorted" | cut -d':' -f2))
 
 # Print sorted key indexes and their hashes
 echo "$sorted"
@@ -38,8 +39,9 @@ stake_keyhashes=$(cat <<EOF
 EOF
 )
 
-# Sort based on hash value
+# Sort based on hash value and extract sorted hashes
 stake_sorted=$(echo "$stake_keyhashes" | sort -t ':' -k2)
+SORTED_STAKE_KEYHASHES=($(echo "$stake_sorted" | cut -d':' -f2))
 
 # Print sorted key indexes and their hashes
 echo "$stake_sorted"
@@ -53,19 +55,19 @@ cat << EOF >${POLICY_PATH}/policy-payment.script
  [
    {
      "type": "sig",
-     "keyHash": "${KEYHASH0}"
+     "keyHash": "${SORTED_KEYHASHES[0]}"
    },
    {
      "type": "sig",
-     "keyHash": "${KEYHASH1}"
+     "keyHash": "${SORTED_KEYHASHES[1]}"
    },
    {
      "type": "sig",
-     "keyHash": "${KEYHASH2}"
+     "keyHash": "${SORTED_KEYHASHES[2]}"
    },
    {
      "type": "sig",
-     "keyHash": "${KEYHASH3}"
+     "keyHash": "${SORTED_KEYHASHES[3]}"
    }
  ]
 }
@@ -81,19 +83,19 @@ cat << EOF >${POLICY_PATH}/policy-stake.script
  [
    {
      "type": "sig",
-     "keyHash": "${STAKE_KEYHASH0}"
+     "keyHash": "${SORTED_STAKE_KEYHASHES[0]}"
    },
    {
      "type": "sig",
-     "keyHash": "${STAKE_KEYHASH1}"
+     "keyHash": "${SORTED_STAKE_KEYHASHES[1]}"
    },
    {
      "type": "sig",
-     "keyHash": "${STAKE_KEYHASH2}"
+     "keyHash": "${SORTED_STAKE_KEYHASHES[2]}"
    },
    {
      "type": "sig",
-     "keyHash": "${STAKE_KEYHASH3}"
+     "keyHash": "${SORTED_STAKE_KEYHASHES[3]}"
    }
  ]
 }

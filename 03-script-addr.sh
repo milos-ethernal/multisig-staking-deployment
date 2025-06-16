@@ -1,8 +1,8 @@
 #!/bin/bash
 
-. ./env
-
 set -e
+
+. ./env
 
 cardano-cli address build \
     --payment-script-file ${POLICY_PATH}/policy-payment.script \

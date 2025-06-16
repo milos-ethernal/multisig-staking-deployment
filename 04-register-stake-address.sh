@@ -1,8 +1,8 @@
 #!/bin/bash
 
-. ./env
-
 set -e
+
+. ./env
 
 # Get stake address deposit amount from protocol parameters as stakeAddressDeposit or keyDeposit
 # check protocol-parameters.json first, it could be listed as "keyDeposit" or "stakeAddressDeposit"
@@ -58,7 +58,6 @@ do
 done
 
 # Create witnesses(signatures) stake
-WITNESS_INDEX=$((${MULTISIG_ADDRESS_WITNESSES}-1))
 for i in $(seq 0 ${WITNESS_INDEX})
 do
     cardano-cli ${CARDANO_CLI_TAG} transaction witness \

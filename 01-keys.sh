@@ -1,8 +1,8 @@
 #!/bin/bash
 
-. ./env
-
 set -e
+
+. ./env
 
 for i in {0..2}
 do
